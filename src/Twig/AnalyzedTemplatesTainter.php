@@ -60,7 +60,12 @@ class AnalyzedTemplatesTainter implements AfterMethodCallAnalysisInterface
             new CodeLocation($statements_source, $expr->name)
         );
 
-        $templateParameters = self::generateTemplateParameters($expr->args[1]->value, $statements_source);
+         try {
+            $templateParameters = self::generateTemplateParameters($expr->args[1]->value, $statements_source);
+        } catch (\Throwable $throwable) {
+            $templateParameters = [];
+        }
+        
         foreach ($templateParameters as $parameterName) {
             $label = $argumentId = strtolower($templateName).'#'.strtolower($parameterName);
             $destinationNode = new DataFlowNode($argumentId, $label, null, null);
